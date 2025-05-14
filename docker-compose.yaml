@@ -1,0 +1,41 @@
+networks:
+  net-artour:
+    name: net-artour
+    external: true
+
+services:
+  # ARTOUR API
+  artour-api:
+    container_name: artour-api
+    image: artour-api:latest
+    restart: always
+    networks:
+      - net-artour
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.artour-api.rule=Host(`api.app-artour-lampung.web.id`)"
+      - "traefik.http.routers.artour-api.entrypoints=websecure"
+      - "traefik.http.routers.artour-api.tls.certresolver=resolver"
+      - "traefik.http.services.artour-api.loadbalancer.server.port=8000"
+    volumes:
+      - ./storages:/app/storages
+    external_links:
+      - mysql-db:mysql-db
+    # ports:
+    #   - 8000:${APP_PORT}
+    environment:
+      # Application
+      - APP_PORT=${APP_PORT}
+      - APP_WEB_BASE_URL=${APP_WEB_BASE_URL}
+      - APP_API_BASE_URL=${APP_API_BASE_URL}
+      - APP_FREEZE=${APP_FREEZE}
+      # Databases
+      - MAIN_DATABASE_URL=${MAIN_DATABASE_URL}
+      # Private Keys
+      - GOOGLE_AUTH_CLIENT_ID=${GOOGLE_AUTH_CLIENT_ID}
+      - GOOGLE_AUTH_CLIENT_SECRET=${GOOGLE_AUTH_CLIENT_SECRET}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      # Admin emails.
+      - SUPER_ADMIN_MAILS=${SUPER_ADMIN_MAILS}
+      # Zona waktu: [Asia/Jakarta|Asia/Makasar|Asia/Jayapura]
+      - TZ=${TZ}

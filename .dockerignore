@@ -1,0 +1,5 @@
+node_modules
+storages
+test
+.env
+.env.*

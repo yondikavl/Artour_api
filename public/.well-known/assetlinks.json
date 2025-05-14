@@ -1,0 +1,9 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.neszha.artour",
+      "sha256_cert_fingerprints":
+      ["36:7A:C4:3D:B4:98:AA:D6:B2:E3:98:54:51:2E:41:BF:EB:75:05:15:22:15:CD:50:F6:86:C1:FE:45:05:3B:92"]
+    }
+  }]

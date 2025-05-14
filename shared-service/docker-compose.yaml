@@ -1,0 +1,70 @@
+networks:
+  net-artour:
+    name: net-artour
+    driver: bridge
+
+# volumes:
+#   vol_mysql_db:
+#     name: vol-mysql-db
+
+services:
+  # LOAD BALANCER
+  treafik:
+    container_name: treafik
+    image: traefik:v2.9
+    restart: always
+    networks:
+      - net-artour
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.resolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.resolver.acme.email=fanesahadi@gmail.com"
+      - "--certificatesresolvers.resolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "443:443"
+      # - "8080:8080"
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  # ## MYSQL DATABASE
+  # mysql_db:
+  #   container_name: mysql-db
+  #   image: mysql:8.0-debian
+  #   restart: always
+  #   networks:
+  #     - net-artour
+  #   volumes:
+  #     - vol_mysql_db:/var/lib/mysql
+  #   # ports:
+  #   #   - 3306:3306
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+  # ## PHPMYADMIN
+  # phpmyadmin:
+  #   container_name: phpmyadmin
+  #   image: phpmyadmin:5.2.1-apache
+  #   restart: always
+  #   networks:
+  #     - net-artour
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.artour-db.rule=Host(`db-artour.myexams.web.id`)"
+  #     - "traefik.http.routers.artour-db.entrypoints=websecure"
+  #     - "traefik.http.routers.artour-db.tls.certresolver=resolver"
+  #     - "traefik.http.services.artour-db.loadbalancer.server.port=80"
+  #   depends_on:
+  #     - mysql_db
+  #   # ports:
+  #   #   - 9000:80
+  #   environment:
+  #     PMA_HOST: mysql_db
+  #     PMA_PORT: 3306

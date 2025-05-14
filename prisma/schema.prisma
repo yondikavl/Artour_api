@@ -1,0 +1,258 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("MAIN_DATABASE_URL")
+}
+
+enum UserRoleEnum {
+    USER
+    ADMIN
+}
+
+enum FileTypeEnum {
+    IMAGE_MAP
+    IMAGE_REVIEW
+}
+
+enum PlaceStatusEnum {
+    PUBLISHED
+    UNDER_REVIEW
+}
+
+model Users {
+    id              String          @id @default(uuid())
+    avatar          String?                           
+    role            UserRoleEnum
+    name            String          @db.VarChar(64)
+    email           String          @unique @db.VarChar(100)
+    password        String          @db.VarChar(255)
+    active          Boolean         @default(false)
+    lastLoginAt     DateTime?
+    createdAt       DateTime        @default(now())
+    updatedAt       DateTime        @updatedAt
+
+    // Relations
+    sessions        Sessions[]
+    files           Files[]
+    places          Places[]
+    placeLikes      PlaceLikes[]
+    placeDislikes   PlaceDislikes[]
+    placeBookmarks  PlaceBookmarks[]
+    placeReviews    PlaceReviews[]
+
+    // Options
+    @@map(name: "users")
+    @@index([role])
+    @@index([active])
+    @@index([createdAt])
+    @@index([updatedAt])
+}
+
+model Sessions {
+    id              String      @id @default(uuid())
+    userId          String
+    ipAddress       String      @db.VarChar(255)
+    userAgent       String
+    signoutAt       DateTime?    
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+
+    // Relations
+    user            Users       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+    // Options
+    @@map(name: "sessions")
+    @@index([signoutAt])
+}
+
+model Files {
+    id              String              @id @default(uuid())
+    userId          String
+    type            FileTypeEnum
+    originalName    String              @db.MediumText()
+    filename        String
+    size            String
+    mimetype        String
+    used            Boolean             @default(false)
+    createdAt       DateTime            @default(now())
+    updatedAt       DateTime            @updatedAt
+
+    // Relations
+    place1          Places[]            @relation(name: "MapImageCover")
+    place2          Places[]            @relation(name: "MapArImageCover")
+    user            Users               @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+
+    // Options
+    @@map(name: "files")
+    @@index([type])
+    @@index([used])
+}
+
+model Places {
+    id                  String              @id @default(uuid())
+    userId              String
+    status              PlaceStatusEnum
+    name                String              @db.VarChar(100)
+    description         String              @db.LongText
+    categoryId          String
+    mapImageIds         Json
+    mapImageCoverId     String
+    mapArImageCoverId   String
+    latitude            Float
+    longitude           Float
+    address             String              @db.LongText
+    openingHours        Json
+    website             String?
+    phone               String
+    price               Int                 @default(0)
+    rating              Float               @default(0)
+    views               Int                 @default(0)
+    like                Int                 @default(0)
+    dislike             Int                 @default(0)
+    saved               Int                 @default(0)
+    createdAt           DateTime            @default(now())
+    updatedAt           DateTime            @updatedAt
+
+    // Relations
+    user                Users               @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+    mapImageCover       Files               @relation(name: "MapImageCover", fields: [mapImageCoverId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+    mapArImageCover     Files               @relation(name: "MapArImageCover", fields: [mapArImageCoverId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+    category            PlaceCategories     @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+    placeHashtags       PlaceHashtags[]
+    likes               PlaceLikes[]
+    dislikes            PlaceDislikes[]
+    placeBookmarks      PlaceBookmarks[]
+    placeReviews        PlaceReviews[]
+
+    // Options
+    @@map(name: "places")
+    @@index([status])
+    @@index([name])
+    @@index([latitude, longitude])
+    @@index([rating])
+    @@index([like])
+    @@index([dislike])
+    @@index([createdAt])
+    @@index([updatedAt])
+}
+
+model PlaceCategories {
+    id              String              @id @default(uuid())
+    name            String              @db.VarChar(100)
+    description     String              @db.LongText
+    mapMarker       String
+    createdAt       DateTime            @default(now())
+    updatedAt       DateTime            @updatedAt
+
+    // Relations
+    places          Places[]
+
+    // Options
+    @@map(name: "place_categories")
+    @@index([name])
+}
+
+model PlaceHashtags {
+    id              String              @id @default(uuid())
+    placeId         String
+    hashtagId       String
+    createdAt       DateTime            @default(now())
+    updatedAt       DateTime            @updatedAt
+
+    // Relations
+    place           Places              @relation(fields: [placeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+    hashtag         Hashtags            @relation(fields: [hashtagId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+    // Options
+    @@map(name: "place_hashtags")
+    @@index([placeId, hashtagId])
+}
+
+model Hashtags {
+    id              String              @id @default(uuid())
+    name            String              @db.VarChar(100)
+    createdAt       DateTime            @default(now())
+    updatedAt       DateTime            @updatedAt
+
+    // Relations
+    placeHashtags   PlaceHashtags[]
+
+    // Options
+    @@map(name: "hashtags")
+    @@index([name])
+}
+
+model PlaceLikes {
+    id              String              @id @default(uuid())
+    placeId         String
+    userId          String
+    createdAt       DateTime            @default(now())
+    updatedAt       DateTime            @updatedAt
+
+    // Relations
+    place           Places              @relation(fields: [placeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+    user            Users               @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+    // Options
+    @@map(name: "place_likes")
+    @@index([placeId, userId])
+}
+
+model PlaceDislikes {
+    id              String              @id @default(uuid())
+    placeId         String
+    userId          String
+    createdAt       DateTime            @default(now())
+    updatedAt       DateTime            @updatedAt
+
+    // Relations
+    place           Places              @relation(fields: [placeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+    user            Users               @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+    // Options
+    @@map(name: "place_dislikes")
+    @@index([placeId, userId])
+}
+
+model PlaceBookmarks {
+    id              String              @id @default(uuid())
+    placeId         String
+    userId          String
+    createdAt       DateTime            @default(now())
+    updatedAt       DateTime            @updatedAt
+
+    // Relations
+    place           Places              @relation(fields: [placeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+    user            Users               @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+    // Options
+    @@map(name: "place_bookmarks")
+    @@index([placeId, userId])
+}
+
+model PlaceReviews {
+    id              String              @id @default(uuid())
+    userId          String
+    placeId         String
+    rating          Float
+    content         String              @db.LongText
+    imageIds        Json
+    createdAt       DateTime            @default(now())
+    updatedAt       DateTime            @updatedAt
+
+    // Relations
+    user            Users               @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+    place           Places              @relation(fields: [placeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+    // Options
+    @@map(name: "place_reviews")
+    @@index([rating])
+    @@index([createdAt])
+    @@index([updatedAt])
+}

@@ -1,0 +1,1594 @@
+{
+	"info": {
+		"_postman_id": "25ec70bb-a0be-42a1-a014-d225b7c833f6",
+		"name": "AR Tour v0.1.0",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29018248"
+	},
+	"item": [
+		{
+			"name": "App Info",
+			"item": [
+				{
+					"name": "Root Api",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"pm.environment.set(\"ACCESS_TOKEN\", response.data.accessToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin1@gmail.com\",\r\n    \"password\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auth with Google [Browser Only]",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/auth/google",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"google"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "My Session Info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/auth/my-session",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"my-session"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/auth/logout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get Users [Admin Only]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users?filter=newest&keyword=@gmail.com&limit=500",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "newest",
+									"description": "newest|role:user|role:admin|role:super_admin"
+								},
+								{
+									"key": "keyword",
+									"value": "@gmail.com"
+								},
+								{
+									"key": "limit",
+									"value": "500"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Avatar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/neszha/Movies/itentix test docs/img-500x500.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/avatars",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"avatars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change User Info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Edited Name\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/info",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change User Role [Super Admin Only]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"role\": \"ADMIN\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/role?userId=xxx",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"role"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "xxx"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User [Super Admin Only]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/users/ffb2c2eb-021c-497b-b67c-b081cdba4185",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"ffb2c2eb-021c-497b-b67c-b081cdba4185"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Files",
+			"item": [
+				{
+					"name": "Upload Map Content",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.environment.set(\"tmp_map_content_file_id\", response.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/neszha/projects/artour/artour-api/test/dummy-images/place-img-04.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/files/map-contents",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"files",
+								"map-contents"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Places",
+			"item": [
+				{
+					"name": "Search",
+					"item": [
+						{
+							"name": "Seach Highlight",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ACCESS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/places/highlight",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"places",
+										"highlight"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Seach Nearby Place",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ACCESS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/places/nearby-place?placeId=97824392-1e55-455c-8d48-bcddeed146e0",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"places",
+										"nearby-place"
+									],
+									"query": [
+										{
+											"key": "placeId",
+											"value": "97824392-1e55-455c-8d48-bcddeed146e0",
+											"description": "required"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Seach Nearest",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ACCESS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"latitude\": {{$randomLatitude}},\n    \"longitude\": {{$randomLongitude}}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/places/nearest",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"places",
+										"nearest"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Map Search",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ACCESS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"latitude\": -5.0741242,\n    \"longitude\": 105.3997967\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/places/map-search?keyword=a",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"places",
+										"map-search"
+									],
+									"query": [
+										{
+											"key": "keyword",
+											"value": "a"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AR Map Search",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ACCESS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"latitude\": {{$randomLatitude}},\n    \"longitude\": {{$randomLongitude}}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/places/ar-map-search",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"places",
+										"ar-map-search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Actions",
+					"item": [
+						{
+							"name": "Get Meta Data",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ACCESS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/places/{{tmp_place_id}}/action-metadata",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"places",
+										"{{tmp_place_id}}",
+										"action-metadata"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Like Place",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/places/{{tmp_place_id}}/like",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"places",
+										"{{tmp_place_id}}",
+										"like"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Dislike Place",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ACCESS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/places/{{tmp_place_id}}/dislike",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"places",
+										"{{tmp_place_id}}",
+										"dislike"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Increment Views Place",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ACCESS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/places/{{tmp_place_id}}/inc-views",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"places",
+										"{{tmp_place_id}}",
+										"inc-views"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add to Bookmark Place",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ACCESS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/places/{{tmp_place_id}}/add-bookmarks",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"places",
+										"{{tmp_place_id}}",
+										"add-bookmarks"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Bookmarks",
+					"item": [
+						{
+							"name": "Get User Bookmarks",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ACCESS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/places/bookmarks",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"places",
+										"bookmarks"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create Place",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.environment.set(\"tmp_place_id\", response.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomJobTitle}}\",\n    \"description\": \"{{$randomLoremParagraph}}\",\n    \"categoryId\": \"{{tmp_place_category_id}}\",\n    \"mapImageIds\": [\n        \"{{tmp_map_content_file_id}}\",\n        \"{{tmp_map_content_file_id}}\",\n        \"{{tmp_map_content_file_id}}\",\n        \"{{tmp_map_content_file_id}}\"\n    ],\n    \"mapImageCoverId\": \"{{tmp_map_content_file_id}}\",\n    \"latitude\": {{$randomLatitude}},\n    \"longitude\": {{$randomLongitude}},\n    \"address\": \"{{$randomStreetAddress}}\",\n    \"openingHours\": [\n        {\n            \"dayIndex\": 0,\n            \"closed\": true,\n            \"fullOpeningHours\": false,\n            \"openingHours\": \"00:00\",\n            \"closingHours\": \"00:00\"\n        },\n        {\n            \"dayIndex\": 1,\n            \"closed\": true,\n            \"fullOpeningHours\": false,\n            \"openingHours\": \"00:00\",\n            \"closingHours\": \"00:00\"\n        },\n        {\n            \"dayIndex\": 2,\n            \"closed\": true,\n            \"fullOpeningHours\": false,\n            \"openingHours\": \"00:00\",\n            \"closingHours\": \"00:00\"\n        },\n        {\n            \"dayIndex\": 3,\n            \"closed\": true,\n            \"fullOpeningHours\": false,\n            \"openingHours\": \"00:00\",\n            \"closingHours\": \"00:00\"\n        },\n        {\n            \"dayIndex\": 4,\n            \"closed\": true,\n            \"fullOpeningHours\": false,\n            \"openingHours\": \"00:00\",\n            \"closingHours\": \"00:00\"\n        },\n        {\n            \"dayIndex\": 5,\n            \"closed\": true,\n            \"fullOpeningHours\": false,\n            \"openingHours\": \"00:00\",\n            \"closingHours\": \"00:00\"\n        },\n        {\n            \"dayIndex\": 6,\n            \"closed\": true,\n            \"fullOpeningHours\": false,\n            \"openingHours\": \"00:00\",\n            \"closingHours\": \"00:00\"\n        }\n    ],\n    \"website\": \"{{$randomImageUrl}}\",\n    \"phone\": \"{{$randomPhoneNumberExt}}\",\n    \"price\": {{$randomPrice}},\n    \"hashtags\": [\n        \"from_postman\",\n        \"{{$randomWord}}\",\n        \"\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/places",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"places"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Places [Admin Only]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/places?filter=newest&keyword=&limit=500",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"places"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "newest",
+									"description": "newest|rating_desc|rating_asc|like_desc|like_asc|dislike_desc|dislike_asc|save_desc|save_asc|view_desc|view_asc"
+								},
+								{
+									"key": "keyword",
+									"value": ""
+								},
+								{
+									"key": "limit",
+									"value": "500"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "My Places",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/places/my-places",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"places",
+								"my-places"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Place Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/places/{{tmp_place_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"places",
+								"{{tmp_place_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Place Images",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/places/{{tmp_place_id}}/images",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"places",
+								"{{tmp_place_id}}",
+								"images"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Place",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Edited: {{$randomJobTitle}}\",\n    \"description\": \"{{$randomLoremParagraph}}\",\n    \"categoryId\": \"{{tmp_place_category_id}}\",\n    \"mapImageIds\": [\n        \"{{tmp_map_content_file_id}}\",\n        \"{{tmp_map_content_file_id}}\",\n        \"{{tmp_map_content_file_id}}\",\n        \"{{tmp_map_content_file_id}}\"\n    ],\n    \"mapImageCoverId\": \"{{tmp_map_content_file_id}}\",\n    \"latitude\": {{$randomLatitude}},\n    \"longitude\": {{$randomLongitude}},\n    \"address\": \"{{$randomStreetAddress}}\",\n    \"openingHours\": [\n        {\n            \"dayIndex\": 0,\n            \"closed\": true,\n            \"fullOpeningHours\": false,\n            \"openingHours\": \"00:00\",\n            \"closingHours\": \"00:00\"\n        },\n        {\n            \"dayIndex\": 1,\n            \"closed\": true,\n            \"fullOpeningHours\": false,\n            \"openingHours\": \"00:00\",\n            \"closingHours\": \"00:00\"\n        },\n        {\n            \"dayIndex\": 2,\n            \"closed\": true,\n            \"fullOpeningHours\": false,\n            \"openingHours\": \"00:00\",\n            \"closingHours\": \"00:00\"\n        },\n        {\n            \"dayIndex\": 3,\n            \"closed\": true,\n            \"fullOpeningHours\": false,\n            \"openingHours\": \"00:00\",\n            \"closingHours\": \"00:00\"\n        },\n        {\n            \"dayIndex\": 4,\n            \"closed\": true,\n            \"fullOpeningHours\": false,\n            \"openingHours\": \"00:00\",\n            \"closingHours\": \"00:00\"\n        },\n        {\n            \"dayIndex\": 5,\n            \"closed\": true,\n            \"fullOpeningHours\": false,\n            \"openingHours\": \"00:00\",\n            \"closingHours\": \"00:00\"\n        },\n        {\n            \"dayIndex\": 6,\n            \"closed\": true,\n            \"fullOpeningHours\": false,\n            \"openingHours\": \"00:00\",\n            \"closingHours\": \"00:00\"\n        }\n    ],\n    \"website\": \"{{$randomImageUrl}}\",\n    \"phone\": \"{{$randomPhoneNumberExt}}\",\n    \"price\": {{$randomPrice}},\n    \"hashtags\": [\n        \"from_postman\",\n        \"{{$randomWord}}\",\n        \"\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/places/{{tmp_place_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"places",
+								"{{tmp_place_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Place [Admin Allowed]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/places/{{tmp_place_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"places",
+								"{{tmp_place_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Place Category",
+			"item": [
+				{
+					"name": "Create Place Category [Admin Only]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.environment.set(\"tmp_place_category_id\", response.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "{{$randomFirstName}}",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "{{$randomLoremParagraph}}",
+									"type": "text"
+								},
+								{
+									"key": "mapMarker",
+									"type": "file",
+									"src": "/Users/neszha/projects/artour/artour-api/src/databases/seeders/assets/default-map-markers/map-marker-01.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/place-categories",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"place-categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Place Categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/place-categories",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"place-categories"
+							],
+							"query": [
+								{
+									"key": "with-popular-place",
+									"value": "true",
+									"description": "Get with a populate place",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Place Category [Admin Only]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.environment.set(\"tmp_place_category_id\", response.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "{{$randomFirstName}} Edited",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "{{$randomLoremParagraph}}",
+									"type": "text"
+								},
+								{
+									"key": "mapMarker",
+									"type": "file",
+									"src": "/Users/neszha/projects/artour/artour-api/src/databases/seeders/assets/default-map-markers/map-marker-02.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/place-categories/{{tmp_place_category_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"place-categories",
+								"{{tmp_place_category_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Place Category [Admin Only]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/place-categories/{{tmp_place_category_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"place-categories",
+								"{{tmp_place_category_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Place Review",
+			"item": [
+				{
+					"name": "Create Review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.environment.set(\"tmp_place_review_id\", response.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rating\": 1,\n    \"content\": \"{{$randomLoremParagraph}}\",\n    \"imageIds\": [\n        \"{{tmp_map_content_file_id}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/place-reviews?placeId={{tmp_place_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"place-reviews"
+							],
+							"query": [
+								{
+									"key": "placeId",
+									"value": "{{tmp_place_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Place Reviews",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/place-reviews?filter=newest&limit=500&placeId=9769c25b-780a-4da5-a825-bf90c70b4f56",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"place-reviews"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "newest",
+									"description": "newest|rating_desc|rating_asc|rating_5|...|rating_1"
+								},
+								{
+									"key": "limit",
+									"value": "500",
+									"description": "Limit response list data"
+								},
+								{
+									"key": "placeId",
+									"value": "9769c25b-780a-4da5-a825-bf90c70b4f56",
+									"description": "If get data reviews in single place"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Place Reviews",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/place-reviews/my-reviews",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"place-reviews",
+								"my-reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/place-reviews/my-review?placeId={{tmp_place_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"place-reviews",
+								"my-review"
+							],
+							"query": [
+								{
+									"key": "placeId",
+									"value": "{{tmp_place_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rating\": 2,\n    \"content\": \"{{$randomLoremParagraph}}\",\n    \"imageIds\": [\n        \"{{tmp_map_content_file_id}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/place-reviews/{{tmp_place_review_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"place-reviews",
+								"{{tmp_place_review_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Review [Admin Allowed]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rating\": 1,\n    \"content\": \"{{$randomLoremParagraph}}\",\n    \"imageIds\": [\n        \"{{tmp_map_content_file_id}}\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/place-reviews/{{tmp_place_review_id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"place-reviews",
+								"{{tmp_place_review_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Summary",
+			"item": [
+				{
+					"name": "Get Data Overview [Admin Only]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ACCESS_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/summary/data-overview",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"summary",
+								"data-overview"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
