@@ -6,8 +6,10 @@ import { UserLoggedMiddleware } from '@/middlewares/auth.middleware'
 import { FileService } from '../file/file.service'
 import { PlaceReviewService } from '../place-review/place-review.service'
 import { PlaceService } from '../place/place.service'
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
+    imports: [HttpModule],
     controllers: [AuthController],
     providers: [
         AuthService,

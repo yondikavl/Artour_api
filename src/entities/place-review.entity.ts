@@ -15,4 +15,6 @@ export class PlaceReviewEntity {
     user?: UserEntity
     place?: PlaceEntity
     images?: FileEntity[]
+
+    sentiment?: string
 }

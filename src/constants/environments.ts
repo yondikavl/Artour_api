@@ -32,3 +32,8 @@ export const SUPER_ADMIN_MAILS: string[] = process.env.SUPER_ADMIN_MAILS ? proce
  * Time Zone
  */
 export const TZ: string = process.env.TZ
+
+/**
+ * Model Spam
+ */
+export const MODEL_API_BASE_URL: string = process.env.MODEL_API_BASE_URL ?? 'http://localhost:5000'

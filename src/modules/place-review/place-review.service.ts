@@ -7,13 +7,30 @@ import { FileTypeEnum, type Prisma, UserRoleEnum, type PrismaClient } from '@pri
 import { type PlaceReviewEntity } from '@/entities/place-review.entity'
 import { BASE_URL_AVATARS, BASE_URL_MAP_CONTENTS, PATH_NO_PICTURE } from '@/constants/file-path'
 import { type UpdatePlaceReviewDto } from './dto/update-place-review.dto'
-import { APP_API_BASE_URL } from '@/constants/environments'
+import { APP_API_BASE_URL, MODEL_API_BASE_URL } from '@/constants/environments'
+import { HttpService } from '@nestjs/axios'
+import { firstValueFrom } from 'rxjs'
 
 @Injectable()
 export class PlaceReviewService {
     constructor (
+        private readonly httpService: HttpService,
         private readonly fileService: FileService
     ) {}
+
+    private async analyzeReviewContent(text: string): Promise<number> {
+        const url = MODEL_API_BASE_URL + '/predict'
+        try {
+          const { data } = await firstValueFrom(
+            this.httpService.post(url, { text })  
+          )
+          console.error('Hasil analisis:', data.prediction)
+          return data.prediction as number            
+        } catch (err) {
+          console.error('Gagal menghubungi Flask:', err.message)
+          return 0
+        }
+      }
 
     /**
      * Create place review.
@@ -24,6 +41,11 @@ export class PlaceReviewService {
             where: { id: placeId }
         })
         if (place === null) throw new BadRequestException('Data lokasi tidak ditemukan!')
+
+        const isSpam = await this.analyzeReviewContent(dto.content);
+        if (isSpam === 1) {
+            throw new BadRequestException('Ulasan Anda terdeteksi sebagai spam, Harap tuliskan ulasan yang lebih relevan.');
+        }
 
         // User canot multiple review.
         let placeReview = await prisma.placeReviews.findFirst({
@@ -86,7 +108,7 @@ export class PlaceReviewService {
     async getPlaceReviews (placeId: string | undefined, filter: string | undefined, limit: string | undefined): Promise<PlaceReviewEntity[]> {
         // Build query.
         const whereInput: Prisma.PlaceReviewsWhereInput = {
-            placeId
+            placeId,
         }
         let orderByInput: Prisma.Enumerable<Prisma.PlaceReviewsOrderByWithRelationInput> = [
             { createdAt: 'desc' }
@@ -256,6 +278,11 @@ export class PlaceReviewService {
             where: { id: placeReviewId, userId }
         })
         if (placeReview === null) throw new BadRequestException('Data ulasan lokasi tidak ditemukan!')
+
+        const isSpam = await this.analyzeReviewContent(dto.content);
+        if (isSpam === 1) {
+            throw new BadRequestException('Ulasan Anda terdeteksi sebagai spam, Harap tuliskan ulasan yang lebih relevan.');
+        }
 
         // Validate image ids.
         const imageFiles: FileEntity[] = await prisma.files.findMany({

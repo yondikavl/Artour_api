@@ -2,8 +2,11 @@ import { type MiddlewareConsumer, Module, type NestModule, RequestMethod } from 
 import { PlaceCategoryService } from './place-category.service'
 import { PlaceCategoryController } from './place-category.controller'
 import { UserAdminLoggedMiddleware, UserLoggedMiddleware } from '@/middlewares/auth.middleware'
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
+    imports: [HttpModule],
+    exports: [HttpModule],
     controllers: [PlaceCategoryController],
     providers: [PlaceCategoryService]
 })

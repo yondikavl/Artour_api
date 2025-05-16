@@ -3,13 +3,18 @@ import { PlaceReviewService } from './place-review.service'
 import { PlaceReviewController } from './place-review.controller'
 import { UserLoggedMiddleware } from '@/middlewares/auth.middleware'
 import { FileService } from '../file/file.service'
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
+    imports: [
+        HttpModule,                                         // ← tambahkan
+      ],
     controllers: [PlaceReviewController],
     providers: [
         PlaceReviewService,
         FileService
-    ]
+    ],
+    exports: [PlaceReviewService],   
 })
 export class PlaceReviewModule implements NestModule {
     configure (consumer: MiddlewareConsumer): void {

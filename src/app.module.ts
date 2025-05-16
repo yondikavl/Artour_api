@@ -11,6 +11,7 @@ import { PlaceModule } from './modules/place/place.module'
 import { PlaceCategoryModule } from './modules/place-category/place-category.module'
 import { PlaceReviewModule } from './modules/place-review/place-review.module'
 import { SummaryModule } from './modules/summary/summary.module'
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
     imports: [
@@ -22,7 +23,8 @@ import { SummaryModule } from './modules/summary/summary.module'
         PlaceModule,
         PlaceCategoryModule,
         PlaceReviewModule,
-        SummaryModule
+        SummaryModule,
+        HttpModule
     ],
     controllers: [
         //

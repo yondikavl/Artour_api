@@ -250,6 +250,8 @@ model PlaceReviews {
     user            Users               @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
     place           Places              @relation(fields: [placeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
+    sentiment  String?
+
     // Options
     @@map(name: "place_reviews")
     @@index([rating])
