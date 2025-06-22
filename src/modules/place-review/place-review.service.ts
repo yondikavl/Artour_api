@@ -43,9 +43,7 @@ export class PlaceReviewService {
         if (place === null) throw new BadRequestException('Data lokasi tidak ditemukan!')
 
         const isSpam = await this.analyzeReviewContent(dto.content);
-        if (isSpam === 1) {
-            throw new BadRequestException('Ulasan Anda terdeteksi sebagai spam, Harap tuliskan ulasan yang lebih relevan.');
-        }
+        const spamTag = isSpam === 1 ? 'SPAM' : 'NOT_SPAM';
 
         // User canot multiple review.
         let placeReview = await prisma.placeReviews.findFirst({
@@ -74,6 +72,7 @@ export class PlaceReviewService {
                     placeId,
                     userId,
                     imageIds: imageFiles.map(item => item.id),
+                    sentiment: spamTag,
                     ...dto
                 }
             })
@@ -109,6 +108,7 @@ export class PlaceReviewService {
         // Build query.
         const whereInput: Prisma.PlaceReviewsWhereInput = {
             placeId,
+            sentiment: 'NOT_SPAM'
         }
         let orderByInput: Prisma.Enumerable<Prisma.PlaceReviewsOrderByWithRelationInput> = [
             { createdAt: 'desc' }
@@ -179,7 +179,7 @@ export class PlaceReviewService {
         const placeReview: PlaceReviewEntity = await prisma.placeReviews.findFirst({
             where: {
                 placeId,
-                userId
+                userId,
             },
             include: {
                 user: true
@@ -221,7 +221,7 @@ export class PlaceReviewService {
         // Get my review list.
         const placeReviews: PlaceReviewEntity[] = await prisma.placeReviews.findMany({
             where: {
-                userId
+                userId,
             },
             include: {
                 place: true
@@ -280,9 +280,7 @@ export class PlaceReviewService {
         if (placeReview === null) throw new BadRequestException('Data ulasan lokasi tidak ditemukan!')
 
         const isSpam = await this.analyzeReviewContent(dto.content);
-        if (isSpam === 1) {
-            throw new BadRequestException('Ulasan Anda terdeteksi sebagai spam, Harap tuliskan ulasan yang lebih relevan.');
-        }
+        const spamTag = isSpam === 1 ? 'SPAM' : 'NOT_SPAM';
 
         // Validate image ids.
         const imageFiles: FileEntity[] = await prisma.files.findMany({
@@ -314,6 +312,7 @@ export class PlaceReviewService {
                 data: {
                     rating: dto.rating,
                     content: dto.content,
+                    sentiment: spamTag,
                     imageIds: imageFiles.map(item => item.id)
                 }
             })
